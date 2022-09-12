@@ -1,10 +1,37 @@
+import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Login () {
+export default function Login ({ setToken, setUsuName }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
+
+    function signIn (event) {
+        event.preventDefault();
+
+        const data = {
+            email,
+            password
+        }
+
+        const request = axios.post('http://localhost:5000/login', data);
+
+        request.then(res => {
+            console.log(res.data)
+            console.log("UIA")
+            setToken(res.data.token)
+            setUsuName(res.data.name)
+            navigate("/main-page")
+        })
+
+        request.catch(console.log("erro no login"))
+
+    
+
+    }
 
     return (
         <Content>
@@ -12,14 +39,14 @@ export default function Login () {
 
             <Form>
                 <input onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required value={email} />
-                <input onChange={(e) => setPassword(e.target.value)} placeholder="Senha" required value={password} />
+                <input onChange={(e) => setPassword(e.target.value)} placeholder="Senha" required type="password" value={password} />
 
-                <button>
+                <button onClick={signIn}>
                     Entrar
                 </button>
             </Form>
 
-            <Link to="cadastro">
+            <Link to="/cadastro">
                 <Cadastro>Primeira vez? Cadastre-se!</Cadastro>
             </Link>
         </Content>
@@ -31,6 +58,7 @@ const Content = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 50%;
 
     a {
         text-decoration: none;

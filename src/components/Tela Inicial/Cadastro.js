@@ -1,12 +1,39 @@
+import axios from 'axios';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 export default function Cadastro () {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [repeat_password, setRepeat_password] = useState('');
+
+    const navigate = useNavigate();
+
+    function signUp (event) {
+        event.preventDefault();
+
+        const data = {
+            name,
+            email,
+            password,
+            repeat_password
+        }
+
+        const request = axios.post('http://localhost:5000/cadastro', data);
+
+        request.then(res => {
+            console.log(res.data)
+            navigate("/login")
+        })
+
+        request.catch(console.log("erro no cadastro"))
+
+    
+
+    }
+
 
     return (
         <Content>
@@ -18,16 +45,16 @@ export default function Cadastro () {
 
                 <input onChange={(e) => setEmail(e.target.value)} placeholder="E-mail" required value={email} />
 
-                <input onChange={(e) => setPassword(e.target.value)} placeholder="Senha" required value={password} />
+                <input onChange={(e) => setPassword(e.target.value)} placeholder="Senha" required type="password" value={password} />
 
-                <input onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirme a senha" required value={confirmPassword} />
+                <input onChange={(e) => setRepeat_password(e.target.value)} placeholder="Confirme a senha" required type="password" value={repeat_password} />
 
-                <button>
+                <button onClick={signUp}>
                     Cadastrar
                 </button>
             </Form>
 
-            <Link to="login">
+            <Link to="/login">
                 <Login>Já tem uma conta? Entre agora!</Login>
             </Link>
         </Content>
@@ -40,6 +67,7 @@ const Content = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 28%;
 
     a {
         text-decoration: none;
@@ -58,7 +86,7 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 206px;
+    height: 360px;
 
     input {
         width: 326px;

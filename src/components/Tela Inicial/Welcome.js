@@ -28,6 +28,7 @@ const Logo = styled.div`
 `
 
 const Content = styled.div`
+    margin-top: 66%;
   
 
     a {
